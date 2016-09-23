@@ -11,9 +11,11 @@
         return rows.map(function(row) { return row[key]; });
     }
 	
-	var cName = unpack(rows, 'name'),
+	var myPlot = document.getElementById('myDiv'),
+		cName = unpack(rows, 'name'),
 	    cLat = unpack(rows, 'lat'),
 	    cLon = unpack(rows, 'lon'),
+		cCap = unpack(rows, 'mCap')
 		color = [,"rgb(255,65,54)","rgb(133,20,75)","rgb(255,133,27)","lightgrey"];
 
 	  var data = [{
@@ -24,7 +26,9 @@
 	   hoverinfo: 'text',
 	   text: cName,
 	   marker: {
-	     size: 20
+	     size: cCap/100000000,
+		 color: 'orange',
+		 opacity: .5	   
 	   },
 	}];
 
@@ -46,6 +50,10 @@
 	};
 
 	Plotly.plot(myDiv, data, layout, {showLink: false});
+	  });
+	  
+	  myPlot.on('plotly_click', function(data){
+	      alert(data[1])
 	  });
 </script>
 </body>

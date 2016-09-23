@@ -1,5 +1,5 @@
-lat,lon,name
-37.4,-122.08,Google
-47.6,-122.3,Amazon
-40.7,-74.01,Goldman Sachs
-32.890006,-96.949909,Exxon Mobile
+lat,lon,name,mCap
+37.4,-122.08,Google,"558,060,000,000"
+47.6,-122.3,Amazon,"388,810,000,000"
+40.7,-74.01,Goldman Sachs,"67,710,000,000"
+32.890006,-96.949909,Exxon Mobil,"347,530,000,000"
