@@ -1,0 +1,51 @@
+<head>
+<!-- Plotly.js -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+<!-- Plotly chart will be drawn inside this DIV -->
+<div id="myDiv"></div>
+<script>
+	Plotly.d3.csv('https://raw.githubusercontent.com/plotly/datasets/master/2014_us_cities.csv', function(err, rows){
+		function unpack(rows, key) {
+        return rows.map(function(row) { return row[key]; });
+    }
+	
+	var cName = unpack(rows, 'name'),
+	    cLat = unpack(rows, 'lat'),
+	    cLon = unpack(rows, 'lon'),
+		color = [,"rgb(255,65,54)","rgb(133,20,75)","rgb(255,133,27)","lightgrey"];
+
+	  var data = [{
+	   type: 'scattergeo',
+	   locationmode: 'USA-states',
+	   lat: cLat,
+	   lon: cLon,
+	   hoverinfo: 'text',
+	   text: cName,
+	   marker: {
+	     size: 20
+	   },
+	}];
+
+	var layout = {
+	    title: 'Companies',
+	    showlegend: false,
+	    geo: {
+	      scope: 'usa',
+	      projection: {
+	        type: 'albers usa'
+	      },
+	      showland: true,
+	      landcolor: 'rgb(217, 217, 217)',
+	      subunitwidth: 1,
+	      countrywidth: 1,
+	      subunitcolor: 'rgb(255,255,255)',
+	      countrycolor: 'rgb(255,255,255)'
+	    },
+	};
+
+	Plotly.plot(myDiv, data, layout, {showLink: false});
+	  });
+</script>
+</body>
