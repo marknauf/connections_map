@@ -1,4 +1,4 @@
-Plotly.d3.csv('https://raw.githubusercontent.com/rythei/plotly_test/data_w_mCap/test_companies.csv', function(err, rows){
+Plotly.d3.csv('https://raw.githubusercontent.com/rythei/plotly_test/7d100d1cc21705248905061af401b814ee229022/test_companies.csv', function(err, rows){
 		function unpack(rows, key) {
 	    return rows.map(function(row) { return row[key]; });
 	}
@@ -77,8 +77,7 @@ Plotly.d3.csv('https://raw.githubusercontent.com/rythei/plotly_test/data_w_mCap/
 		else{
 			cPoint = data.points[0].pointNumber
 			console.log(cPoint)
-			var a = Object.keys(rows)
-			console.log(rows.a)
+			console.log(rows[1][2])
 			var nUpdate = {
 			   marker: {
 			     size: cSize,
