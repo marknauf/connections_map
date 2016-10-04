@@ -13,14 +13,21 @@ Plotly.d3.csv('https://raw.githubusercontent.com/rythei/plotly_test/data_w_mCap/
 		cText = [],
 		color = [,"rgb(255,65,54)","rgb(133,20,75)","rgb(255,133,27)","lightgrey"],
 		isClicked = false;
+		//connections = [cName.length][];
 
 	for ( var i = 0 ; i < cCap.length; i++) {
 	        var currentSize = cCap[i] / scale;
 			var currentText = cName[i] + '<br>$' +cCap[i]/1000000000 + 'b';
-			cText.push(currentText)
+			cText.push(currentText);
 	        cSize.push(currentSize);
 	    }
 
+	for(var i = 0; i < cCap.length; i++){
+		for(var j = 0; j < cCap.length; j++){
+			
+		}
+	}
+	
 	var data = [{
 	   type: 'scattergeo',
 	   locationmode: 'USA-states',
@@ -69,7 +76,9 @@ Plotly.d3.csv('https://raw.githubusercontent.com/rythei/plotly_test/data_w_mCap/
 		}
 		else{
 			cPoint = data.points[0].pointNumber
-			
+			console.log(cPoint)
+			var a = Object.keys(rows)
+			console.log(rows.a)
 			var nUpdate = {
 			   marker: {
 			     size: cSize,
