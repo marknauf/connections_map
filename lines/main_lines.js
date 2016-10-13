@@ -14,7 +14,8 @@ Plotly.d3.csv('https://raw.githubusercontent.com/rythei/plotly_test/data_w_mCap/
 		color = [,"rgb(255,65,54)","rgb(133,20,75)","rgb(255,133,27)","lightgrey"],
 		isClicked = false,
 		connections = [[]],
-		nCon = cName.length;
+		nCon = cName.length,
+		click = 1;
 
 	for ( var i = 0 ; i < cCap.length; i++) {
 	        var currentSize = cCap[i] / scale;
@@ -39,15 +40,14 @@ Plotly.d3.csv('https://raw.githubusercontent.com/rythei/plotly_test/data_w_mCap/
 	   hoverinfo: 'text',
 	   text: cText,
 	   marker: {
-	     size: 35,
-		 color: 'rgb(243,243,21)',
-		 opacity: .75,
-		 symbol: "circle-cross"  
+	     size: 20,
+		 color: 'rgb(255,198,39)',
+		 opacity: 1	   
 	   },
 	}];
 
 	var layout = {
-	    title: 'Companies<br>Click for connections',
+	    title: 'Companies<br>Lines',
 	    showlegend: false,
 	    geo: {
 	      scope: 'usa',
@@ -55,69 +55,67 @@ Plotly.d3.csv('https://raw.githubusercontent.com/rythei/plotly_test/data_w_mCap/
 	        type: 'albers usa'
 	      },
 	      showland: true,
-	      landcolor: 'rgb(0,0,0)', //grey is 79,72,73
-	      subunitwidth: 0,
-	      countrywidth: 4,
-	      subunitcolor: 'rgb(79,72,73)',
-	      countrycolor: 'rgb(253,0,255)',
-		  paper_bgcolor: 'rgb(0,0,0,0)',
-		  bgcolor: 'rbg(0,0,0,0)'
+	      landcolor: 'rgb(217, 217, 217)',
+	      subunitwidth: 1,
+	      countrywidth: 1,
+	      subunitcolor: 'rgb(255,255,255)',
+	      countrycolor: 'rgb(255,255,255)'
 	    },
 	};
 
-	Plotly.plot(myDiv, data, layout, {showLink: false});
+	p = Plotly.plot(myDiv, data, layout, {showLink: false});
+	p;
 
 	myPlot.on("plotly_click", function(data){
 		if(isClicked == true){
-			var update = [{
-			   type: 'scattergeo',
-			   locationmode: 'USA-states',
-			   lat: cLat,
-			   lon: cLon,
-			   hoverinfo: 'text',
-			   text: cText,
-			   marker: {
-			     size: 35,
-				 color: 'rgb(243,243,21)',
-				   opacity: .75	   
-			   },
-			}];
-	
-			Plotly.deleteTraces(myDiv,0)
-			Plotly.plot(myDiv, update,layout);
+			Plotly.redraw('myDiv', data,layout);
 			isClicked = false;
 		}
 		else{
+			
 			cPoint = data.points[0].pointNumber
 			
-			var nLat = []
-			var nLon = []
+			var sLat = [];
+			var sLon = [];
+			var nLat = [];
+			var nLon = [];
 
 			for(var i=0;i<nCon;i++){
 				if(parseInt(connections[cPoint][i]) == 1){
 					nLat.push(cLat[i]);
 					nLon.push(cLon[i]);
+					sLat.push(cLat[cPoint]);
+					sLon.push(cLon[cPoint]);
 				}
 			}
 			
-
-			var nUpdate = [{
-				mode: 'lines+markers',
-			   type: 'scattergeo',
-			   locationmode: 'USA-states',
-			   lat: nLat,
-			   lon: nLon,
-			   hoverinfo: 'text',
-			   text: cText,
-			   marker: {
-			     size: 35,
-				 color: 'rgb(255, 255, 255)',
-				   opacity: .75	   
-			   },
-			}];
+			var update = []
+			for(var i =0; i<nCon; i++){
+				var result = {
+	   			  locationmode: 'USA-states',
+			      type: 'scattergeo',
+			      lat: [ sLat[i], nLat[i] ],
+			      lon: [ sLon[i], nLon[i] ],
+			      mode: 'lines+markers',
+			      line:{
+			        width: 2,
+			        color: 'rgb(255,198,39)'
+			      },
+			   	  hoverinfo: 'text',
+			   	  text: cText,
+			   	  marker: {
+			   	  	size: 20,
+			   		color: 'rgb(255,198,39)',
+			   		opacity: 1	   
+			   	  }
+			    };
+				
+				update.push(result);
+				
+			}
 			
-			Plotly.deleteTraces(myDiv,0)
-			Plotly.plot(myDiv, nUpdate, layout);
+			Plotly.addTraces(myDiv, update);
+			
 			isClicked = true;
 		}
 	});
