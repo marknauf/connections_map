@@ -14,7 +14,9 @@ Plotly.d3.csv('https://raw.githubusercontent.com/rythei/connections_map/ryan_map
 		color = [,"rgb(255,65,54)","rgb(133,20,75)","rgb(255,133,27)","lightgrey"],
 		isClicked = false,
 		connections = [[]],
-		nCon = cName.length;
+		nCon = cName.length,
+		click_count = 0,
+		traces = [];
 
 	for ( var i = 0 ; i < cCap.length; i++) {
 	        var currentSize = cCap[i] / scale;
@@ -70,6 +72,7 @@ Plotly.d3.csv('https://raw.githubusercontent.com/rythei/connections_map/ryan_map
 	myPlot.on("plotly_click", function(data){
 		if(isClicked == true){
 			var update = [{
+				mode: 'markers',
 			   type: 'scattergeo',
 			   locationmode: 'USA-states',
 			   lat: cLat,
@@ -82,19 +85,23 @@ Plotly.d3.csv('https://raw.githubusercontent.com/rythei/connections_map/ryan_map
 				   opacity: .75	   
 			   },
 			}];
-	
-			Plotly.deleteTraces(myDiv,0)
+			
+			
+			//Plotly.deleteTraces(myDiv, [-1,-2])
+			console.log(traces)
+			Plotly.deleteTraces(myDiv,traces)
 			Plotly.plot(myDiv, update,layout);
 			isClicked = false;
 		}
 		else{
-			cPoint = data.points[0].pointNumber
 			
-			//var sLat = cLat[cPoint];
-			//var sLon = cLon[cPoint];
+			cPoint = data.points[0].pointNumber;
 			
-			var nLat = []
-			var nLon = []
+			var sLat = cLat[cPoint];
+			var sLon = cLon[cPoint];
+			
+			var nLat = [];
+			var nLon = [];
 
 			for(var i=0;i<nCon;i++){
 				if(parseInt(connections[cPoint][i]) == 1){
@@ -103,6 +110,29 @@ Plotly.d3.csv('https://raw.githubusercontent.com/rythei/connections_map/ryan_map
 				}
 			}
 			
+			traces = [];
+			var nUpdate1 = [];
+			for ( var i = 0 ; i < nLat.length; i++ ) {
+
+			        var result = {
+		 				mode: 'lines+markers',
+		 			   type: 'scattergeo',
+		 			   locationmode: 'USA-states',
+						lat: [sLat,nLat[i]],
+						lon: [sLon,nLon[i]],
+		 			   hoverinfo: 'text',
+		 			   text: cText,
+		 			   marker: {
+		 			     size: 35,
+		 				 color: 'rgb(255, 255, 255)',
+		 				   opacity: .75	   
+		 			   },
+				};
+				
+				traces.push(-i-1);
+
+			        nUpdate1.push(result);
+			};
 
 			var nUpdate = [{
 				mode: 'lines+markers',
@@ -119,9 +149,11 @@ Plotly.d3.csv('https://raw.githubusercontent.com/rythei/connections_map/ryan_map
 			   },
 			}];
 			
-			Plotly.deleteTraces(myDiv,0)
-			Plotly.plot(myDiv, nUpdate, layout);
+
+			console.log(traces)
+			Plotly.plot(myDiv, nUpdate1, layout);
 			isClicked = true;
+			click_count++;
 		}
 	});
 	
