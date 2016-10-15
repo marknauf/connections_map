@@ -1,4 +1,4 @@
-Plotly.d3.csv('https://raw.githubusercontent.com/rythei/plotly_test/data_w_mCap/test_companies.csv', function(err, rows){
+Plotly.d3.csv('https://raw.githubusercontent.com/rythei/connections_map/ryan_map/test_companies.csv', function(err, rows){
 		function unpack(rows, key) {
 	    return rows.map(function(row) { return row[key]; });
 	}
@@ -89,6 +89,9 @@ Plotly.d3.csv('https://raw.githubusercontent.com/rythei/plotly_test/data_w_mCap/
 		}
 		else{
 			cPoint = data.points[0].pointNumber
+			
+			//var sLat = cLat[cPoint];
+			//var sLon = cLon[cPoint];
 			
 			var nLat = []
 			var nLon = []
