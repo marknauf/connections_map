@@ -65,13 +65,13 @@ Plotly.d3.csv('https://raw.githubusercontent.com/rythei/connections_map/ryan_map
 	        type: 'albers usa'
 	      },
 	      showland: true,
-	      landcolor: 'rgb(0,0,0)', //grey is 79,72,73
+	      landcolor: 'transparent', //grey is 79,72,73
 	      subunitcolor: 'rgb(0,255,255)',
 	      countrycolor: 'rgb(0,255,255)',
 	      countrywidth: 1,
  		  subunitwidth: 0.2,
 		 // paper_bgcolor: 'rgb(0,0,0)',
-		  bgcolor: 'rgb(0,0,0)'
+		  bgcolor: 'transparent'
 	    },
 	};
 
@@ -91,7 +91,7 @@ Plotly.d3.csv('https://raw.githubusercontent.com/rythei/connections_map/ryan_map
 			   marker: {
 			     size: cSize,
 				 color: 'rgb(255,255,255)',
-				   opacity: .75
+				 opacity: .75
 			   },
 			}];
 
@@ -134,7 +134,7 @@ Plotly.d3.csv('https://raw.githubusercontent.com/rythei/connections_map/ryan_map
 		 			   marker: {
 		 			     size: cSize,
 		 				 color: 'rgb(255, 255, 255)',
-		 				   opacity: .75
+		 				 opacity: .75
 		 			   },
 				};
 
@@ -154,7 +154,7 @@ Plotly.d3.csv('https://raw.githubusercontent.com/rythei/connections_map/ryan_map
 			   marker: {
 			     size: cSize,
 				 color: 'rgb(255, 255, 255)',
-				   opacity: .75
+				 opacity: .75
 			   },
 			}];
 
@@ -230,16 +230,19 @@ setTimeout(function() {
 	var yolo = 0;
 	$(".scattergeolayer > .trace.scattergeo path").each(function() {
 		console.log($(this));
-		var fuckThis = cCap[yolo++] / scale;
+		var offset = 0;
+		var fuckThis = (cCap[yolo++] / scale);
 		console.log(fuckThis);
 		var offsetJ = $(this).offset();
 		console.log(offsetJ);
-		if(fuckThis < 15) {
-			fuckThis = 15;
+		if(fuckThis < 25) {
+			offset = (25 - fuckThis) / 4;
+			fuckThis = 25;
 		}
-		$("body").append("<div id='party"+yolo+"' class='gotohell' style='width: "+fuckThis+"px; height: "+fuckThis+"px; top: "+offsetJ.top+"px; left: "+offsetJ.left+"px'></div>");
+		$("body").prepend("<div id='party"+yolo+"' class='gotohell' style='width: "+fuckThis+"px; height: "+fuckThis+"px; top: "+(offsetJ.top - offset)+"px; left: "+(offsetJ.left - offset)+"px'></div>");
 		setTimeout(function(test) {
 			console.log('here'+test)
+			$(".scattergeolayer > .trace.scattergeo path:nth-child("+test+")").addClass('party');
 			$("#party" + test).addClass('party');
 		}, 1000 * yolo, yolo);
 	});
