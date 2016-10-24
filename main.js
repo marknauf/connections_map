@@ -52,6 +52,8 @@ Plotly.d3.csv('https://raw.githubusercontent.com/rythei/connections_map/ryan_map
 	var layout = {
 	    title: '',
 	    showlegend: false,
+		width: $(window).width(),
+		height: $(window).height(),
  	    margin:{
  	    	l: 30,
 		    r: 30,
@@ -95,9 +97,6 @@ Plotly.d3.csv('https://raw.githubusercontent.com/rythei/connections_map/ryan_map
 			   },
 			}];
 
-
-			//Plotly.deleteTraces(myDiv, [-1,-2])
-			console.log(traces)
 			Plotly.deleteTraces(myDiv,traces)
 			Plotly.plot(myDiv, update,layout);
 			isClicked = false;
@@ -158,8 +157,6 @@ Plotly.d3.csv('https://raw.githubusercontent.com/rythei/connections_map/ryan_map
 			   },
 			}];
 
-
-			console.log(traces)
 			Plotly.plot(myDiv, nUpdate1, layout);
 			isClicked = true;
 			click_count++;
@@ -168,10 +165,32 @@ Plotly.d3.csv('https://raw.githubusercontent.com/rythei/connections_map/ryan_map
 });
 
 setTimeout(function() {
+	var item, dataArrayPoints, array;
+	var redraw = function() {
+		item = $(".countries path:first");
+		dataArrayPoints = item.attr("d").split(",");
+		array = item.attr("d").split("L");
+
+		var index = 0;
+		$(".scattergeolayer > .trace.scattergeo path").each(function() {
+			var offset = 0;
+			var fuckThis = (cCap[index++] / scale);
+			var offsetJ = $(this).offset();
+			if(fuckThis < 25) {
+				offset = (25 - fuckThis) / 4;
+				fuckThis = 25;
+			}
+			if($("#party"+index))
+				$("#party"+index).css("width", fuckThis+"px").css("height", fuckThis+"px").css("top", (offsetJ.top - offset)+"px").css("left", (offsetJ.left - offset)+"px");
+		});
+	};
+
+	setInterval(redraw, 200);
+
+	redraw();
+
 	if($(".countries path")) {
-		var item = $(".countries path:first");
 		item.css('stroke', 'rgba(0,255,255, .9)');
-		var dataArrayPoints = item.attr("d").split(",");
 		$(".countries:first").append(item.clone().attr('id', 'crowBaller1').css('stroke', 'rgba(0,255,255,.9)').css('stroke-width', '2.5px'));
 		$(".countries:first").append(item.clone().attr('id', 'crowBaller2').css('stroke', 'rgba(0,255,255,.93)').css('stroke-width', '3px'));
 		$(".countries:first").append(item.clone().attr('id', 'crowBaller3').css('stroke', 'rgba(0,255,255,.97)').css('stroke-width', '3.5px'));
@@ -181,14 +200,10 @@ setTimeout(function() {
 		$(".countries:first").append(item.clone().attr('id', 'crowBaller6').css('stroke', 'rgba(0,255,255,.93)').css('stroke-width', '3px'));
 		$(".countries:first").append(item.clone().attr('id', 'crowBaller7').css('stroke', 'rgba(0,255,255,.97)').css('stroke-width', '3.5px'));
 		$(".countries:first").append(item.clone().attr('id', 'crowBaller8').css('stroke', 'rgba(0,255,255,1)').css('stroke-width', '4px'));
-		var array = item.attr("d").split("L");
 
 		var i = 0, j = parseInt(array.length / 3);
 
 		var fuck = function(k) {
-			// console.log(item.attr("d"));
-			// console.log(array);
-
 			var string = array[k];
 			if(!string.startsWith("M")) {
 				string = "M"+string;
@@ -198,9 +213,6 @@ setTimeout(function() {
 				string += "Z";
 			}
 
-			// console.log(string);
-			// console.log(string);
-			// console.log(null)
 			return string;
 		}
 
@@ -229,28 +241,13 @@ setTimeout(function() {
 
 	var yolo = 0;
 	$(".scattergeolayer > .trace.scattergeo path").each(function() {
-		console.log($(this));
-		var offset = 0;
-		var fuckThis = (cCap[yolo++] / scale);
-		console.log(fuckThis);
-		var offsetJ = $(this).offset();
-		console.log(offsetJ);
-		if(fuckThis < 25) {
-			offset = (25 - fuckThis) / 4;
-			fuckThis = 25;
-		}
-		$("body").prepend("<div id='party"+yolo+"' class='gotohell' style='width: "+fuckThis+"px; height: "+fuckThis+"px; top: "+(offsetJ.top - offset)+"px; left: "+(offsetJ.left - offset)+"px'></div>");
+		yolo++;
+		$("body").prepend("<div id='party"+yolo+"' class='gotohell'></div>");
+		redraw();
 		setTimeout(function(test) {
-			console.log('here'+test)
 			$(".scattergeolayer > .trace.scattergeo path:nth-child("+test+")").addClass('party');
 			$("#party" + test).addClass('party');
 		}, 1000 * yolo, yolo);
 	});
-	//
-	// $("<div></div>").
-	// $("#test").position();
 
-
-
-
-}, 1000);
+}, 500);

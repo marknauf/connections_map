@@ -112,7 +112,3 @@ body{
 #geo > svg:nth-child(2) > g.baselayer > g.subunits > path{
 	 animation: flash 10s infinite;
 }
-
-#geo > svg:nth-child(2) > g.baselayer{
-
-}
